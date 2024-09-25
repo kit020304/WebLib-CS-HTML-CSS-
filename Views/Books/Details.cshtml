@@ -1,0 +1,19 @@
+﻿@model WebLib.Models.Books
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Подробности о книге</h1>
+
+<div>
+    <h2>@Html.DisplayFor(model => model.title)</h2>
+    <p><strong>Автор:</strong> @Html.DisplayFor(model => model.author)</p>
+    <p><strong>В наличии книг:</strong> @Html.DisplayFor(model => model.availability)</p>
+    <p><strong>Всего экземпляров:</strong> @Html.DisplayFor(model => model.amount)</p>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.id" class="btn btn-primary">Редактировать</a>
+    <a asp-action="Index" class="btn btn-secondary">Вернуться в каталог</a>
+</div>

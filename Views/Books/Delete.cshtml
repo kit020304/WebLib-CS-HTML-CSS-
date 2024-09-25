@@ -1,0 +1,21 @@
+﻿@model WebLib.Models.Books
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Удаление информации о книге</h1>
+
+<h3>Вы уверены в удалении?</h3>
+<div>
+    <h4>@Html.DisplayFor(model => model.title)</h4>
+    <p>@Html.DisplayFor(model => model.author)</p>
+    <p>Available: @Html.DisplayFor(model => model.availability)</p>
+    <p>Total: @Html.DisplayFor(model => model.amount)</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="id" />
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>

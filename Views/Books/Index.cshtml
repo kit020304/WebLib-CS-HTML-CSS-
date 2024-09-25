@@ -1,0 +1,186 @@
+﻿@model IEnumerable<WebLib.Models.Books>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Каталог</h1>
+@section Styles {
+    <link href="~/css/Books.css?v=@DateTime.Now.Ticks" rel="stylesheet" type="text/css" />
+    <style>
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .table-container {
+            margin: auto;
+            width: 80%;
+        }
+
+        .book-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .book-table th, .book-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            .book-table th {
+                background-color: #f2f2f2;
+                text-align: left;
+                font-size: 18px;
+            }
+
+                .book-table th button {
+                    background: none;
+                    border: none;
+                    font-size: 18px;
+                    cursor: pointer;
+                    padding: 0;
+                    color: #007bff;
+                }
+
+                    .book-table th button:hover {
+                        text-decoration: underline;
+                    }
+
+            .book-table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            .book-table tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            .book-table td.title, .book-table td.author, .book-table td.availability {
+                font-size: 16px;
+            }
+
+            .book-table td a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+                .book-table td a:hover {
+                    text-decoration: underline;
+                }
+
+        .out-of-stock {
+            color: red;
+        }
+    </style>
+}
+
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Поиск по названию или автору..." onkeyup="filterBooks()" />
+</div>
+
+<div class="table-container">
+    <table class="book-table">
+        <thead>
+            <tr>
+                <th>
+                    <button type="button" onclick="sortTable('title')">Название книги</button>
+                </th>
+                <th>
+                    <button type="button" onclick="sortTable('author')">Автор</button>
+                </th>
+                <th>
+                    <button type="button" onclick="sortTable('availability')">Наличие</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="bookTableBody">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="title">
+                        <a asp-action="Details" asp-route-id="@item.id">@Html.DisplayFor(modelItem => item.title)</a>
+                    </td>
+                    <td class="author">
+                        <a asp-action="Details" asp-route-id="@item.id">@Html.DisplayFor(modelItem => item.author)</a>
+                    </td>
+                    <td class="availability @(item.availability == 0 ? "out-of-stock" : "")">
+                        <a asp-action="Details" asp-route-id="@item.id">
+                            @Html.DisplayFor(modelItem => item.availability) / @Html.DisplayFor(modelItem => item.amount)
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        let currentSort = {
+            column: '',
+            order: 'asc'
+        };
+
+        function sortTable(column) {
+            const tableBody = document.getElementById('bookTableBody');
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+            if (currentSort.column === column) {
+                currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.order = 'asc';
+            }
+
+            const getCellValue = (row, column) => {
+                switch (column) {
+                    case 'title':
+                        return row.querySelector('.title').innerText.toLowerCase();
+                    case 'author':
+                        return row.querySelector('.author').innerText.toLowerCase();
+                    case 'availability':
+                        return parseInt(row.querySelector('.availability').innerText.split(' / ')[0]);
+                }
+            };
+
+            rows.sort((a, b) => {
+                const aValue = getCellValue(a, column);
+                const bValue = getCellValue(b, column);
+
+                if (aValue < bValue) {
+                    return currentSort.order === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return currentSort.order === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+
+            rows.forEach(row => tableBody.appendChild(row));
+        }
+
+        function filterBooks() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const tableBody = document.getElementById('bookTableBody');
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+            rows.forEach(row => {
+                const title = row.querySelector('.title').innerText.toLowerCase();
+                const author = row.querySelector('.author').innerText.toLowerCase();
+                if (title.includes(searchInput) || author.includes(searchInput)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+}

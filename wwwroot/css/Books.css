@@ -1,0 +1,62 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+    .book-table th, .book-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        word-wrap: break-word;
+    }
+
+    .book-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .book-table .title, .book-table .author {
+        max-width: 200px;
+        white-space: normal;
+    }
+
+    .book-table .availability {
+        text-align: center;
+        font-weight: bold;
+        color: #2c7;
+    }
+
+    .book-table .out-of-stock {
+        color: #c22;
+    }
+
+.footer {
+    padding: 10px;
+    text-align: center;
+    background-color: #f2f2f2;
+    border-top: 1px solid #ddd;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
